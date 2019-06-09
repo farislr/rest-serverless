@@ -23,7 +23,13 @@ provider:
   name: aws
   runtime: nodejs10.x
   stage: dev
-  region: us-east-1
+  region: ap-southeast-1
+  vpc:
+    securityGroupIds:
+      - sg-087a9f6e
+    subnetIds:
+      - subnet-0ae75591fb0735d5f
+      - subnet-0d824fc680024867d
 
 # you can overwrite defaults here
 #  stage: dev
@@ -61,7 +67,6 @@ provider:
 functions:
   hello:
     handler: handler.hello
-    http: GET hello
   app:
     handler: index.handler
     events:
@@ -69,21 +74,20 @@ functions:
       - http: 'ANY {proxy+}'
   getAllUser:
     handler: index.handler
-    events: 
+    events:
       - http: 'GET /user'
   createUser:
     handler: index.handler
-    events: 
+    events:
       - http: POST /user
   getAllArticle:
     handler: index.handler
-    events: 
+    events:
       - http: GET /article
   createArticle:
     handler: index.handler
-    events: 
+    events:
       - http: POST /article
-
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
 #    Check the event documentation for details
