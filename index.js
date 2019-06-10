@@ -1,6 +1,7 @@
 require('dotenv').config()
 const serverless = require('serverless-http')
 const express = require('express')
+const logger = require('morgan')
 const cors = require('cors')
 const passport = require('passport')
 
@@ -10,8 +11,10 @@ const coreRoutes = require('./routes')
 
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
+app.use(logger('dev'))
 app.use(cors())
 app.use(passport.initialize())
+app.use(passport.session())
 
 require('./routes/middleware/auth')
 
