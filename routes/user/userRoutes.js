@@ -2,12 +2,11 @@ const express = require('express')
 const db = require('../../models')
 const jwt = require('jsonwebtoken')
 const router = express.Router()
+const { getAll } = require('../helper/crud')
+const { auth, privilege } = require('../helper/privilege')
 
-router.get('/', (req, res) => {
-  db.user.findAll().then(out => {
-    if (!out) return res.sendStatus(400)
-    return res.send(out)
-  })
+router.get('/', privilege, getAll(db.user), (req, res) => {
+  return res.send(res.locals.val)
 })
 
 router.get('/token/:id', (req, res) => {
@@ -27,8 +26,14 @@ router.get('/token/:id', (req, res) => {
     })
 })
 
-router.post('/add', (req, res) => {
-  res.send('add user')
+router.post('/add', [auth, privilege], (req, res) => {
+  const { body } = req
+  db.user
+    .create({
+      name: body.name,
+      role_id: body.role_id,
+    })
+    .then(created => res.send('User created'))
 })
 
 module.exports = router
